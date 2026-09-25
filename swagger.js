@@ -11,11 +11,11 @@ const options = {
         },
 
         servers: [
-            {
-                url: "http://localhost:3000",
-                description: "Servidor local"
-            }
-        ],
+    {
+        url: "https://backend-project-ativiade1.onrender.com",
+        description: "API em produção"
+    }
+],
 
         tags: [
             {
