@@ -37,6 +37,8 @@ function toProjectResponse(project) {
         project_url: project.project_url,
         repository_url: project.repository_url,
         profile_id: project.profile_id,
+        average_rating: project.average_rating,
+        upvotes: project.upvotes,
         created_at: project.created_at
     };
 }

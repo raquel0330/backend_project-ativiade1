@@ -32,8 +32,39 @@ async function createProject(req, res) {
 
 async function getAllProjects(req, res) {
     try {
+        const {
+            technology,
+            page = 1,
+            limit = 10
+        } = req.query;
+
+        const pageNumber = Number(page);
+        const limitNumber = Number(limit);
+
+        if (
+            !Number.isInteger(pageNumber) ||
+            pageNumber < 1
+        ) {
+            return res.status(400).json({
+                erro: "O parâmetro page deve ser um número inteiro maior que 0."
+            });
+        }
+
+        if (
+            !Number.isInteger(limitNumber) ||
+            limitNumber < 1
+        ) {
+            return res.status(400).json({
+                erro: "O parâmetro limit deve ser um número inteiro maior que 0."
+            });
+        }
+
         const projects =
-            await projectRepository.findAllProjects();
+            await projectRepository.findAllProjects({
+                technology,
+                page: pageNumber,
+                limit: limitNumber
+            });
 
         return res.status(200).json(
             projects.map(toProjectResponse)
@@ -48,7 +79,34 @@ async function getAllProjects(req, res) {
     }
 }
 
+async function upvoteProject(req, res, next) {
+    try {
+        const { id } = req.params;
+
+        const project =
+            await projectRepository.incrementUpvotes(id);
+
+        if (!project) {
+            const error = new Error(
+                "Projeto não encontrado."
+            );
+
+            error.status = 404;
+
+            throw error;
+        }
+
+        return res.status(200).json(
+            toProjectResponse(project)
+        );
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     createProject,
-    getAllProjects
+    getAllProjects,
+    upvoteProject
 };

@@ -1,21 +1,30 @@
 const profileRoutes = require("./routes/profileRoutes");
 const technologyRoutes = require("./routes/technologyRoutes");
 const projectRoutes = require("./routes/projectRoutes");
+const feedbackRoutes = require("./routes/feedbackRoutes");
+
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
 const pool = require("./config/database");
+const errorHandler = require("./middlewares/errorHandler");
+
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
 app.use("/api/profiles", profileRoutes);
 app.use("/api/technologies", technologyRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/projects", feedbackRoutes);
 
-const PORT = process.env.PORT || 3000;
+// Documentação Swagger
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get("/", (req, res) => {
     res.json({
@@ -43,6 +52,11 @@ app.get("/teste-banco", async (req, res) => {
         });
     }
 });
+
+// Tratamento global de erros
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);

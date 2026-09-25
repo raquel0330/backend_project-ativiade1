@@ -48,7 +48,41 @@ async function getAllTechnologies(req, res) {
     }
 }
 
+async function addTechnologyToProject(req, res, next) {
+    try {
+        const { projectId, technologyId } = req.body;
+
+        if (!projectId || !technologyId) {
+            const error = new Error(
+                "projectId e technologyId são obrigatórios."
+            );
+
+            error.status = 400;
+
+            throw error;
+        }
+
+        const relation =
+            await technologyRepository.addTechnologyToProject(
+                projectId,
+                technologyId
+            );
+
+        if (!relation) {
+            return res.status(200).json({
+                mensagem: "A tecnologia já está associada ao projeto."
+            });
+        }
+
+        return res.status(201).json(relation);
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     createTechnology,
-    getAllTechnologies
+    getAllTechnologies,
+    addTechnologyToProject
 };

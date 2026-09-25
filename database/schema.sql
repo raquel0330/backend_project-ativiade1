@@ -1,7 +1,7 @@
 -- ==========================================
 -- DEVSHOWCASE API
 -- MODELAGEM DO BANCO DE DADOS
--- ATIVIDADE 1
+-- ATIVIDADE 2
 -- ==========================================
 
 
@@ -47,6 +47,10 @@ CREATE TABLE projects (
     repository_url VARCHAR(255),
 
     profile_id INTEGER NOT NULL,
+
+    -- Campos adicionados na Atividade 2
+    average_rating NUMERIC(3,2) DEFAULT 0,
+    upvotes INTEGER DEFAULT 0,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
